@@ -13,6 +13,8 @@
 {
     UITextField *searchTextField;
     int checktag;
+    int j;
+    int k;
 }
 @property (nonatomic,retain)UILabel *placeHolderTitle;
 @property (strong, nonatomic) IBOutlet UIView *pView;

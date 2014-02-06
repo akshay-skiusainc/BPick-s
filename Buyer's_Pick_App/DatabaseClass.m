@@ -107,14 +107,14 @@
             
             
             
-            const char *ba_tbl_vendor="CREATE TABLE IF NOT EXISTS ba_tbl_vendor (id INTEGER PRIMARY KEY AUTOINCREMENT , vendor_id VARCHAR,  website VARCHAR,  email_id VARCHAR, address VARCHAR, contact_no VARCHAR,sync_status INTEGER,street1 TEXT, street2 TEXT,city VARCHAR, state VARCHAR, country VARCHAR)";
+            const char *ba_tbl_vendor="CREATE TABLE IF NOT EXISTS ba_tbl_vendor (id INTEGER PRIMARY KEY  , vendor_id VARCHAR,  website VARCHAR,  email_id VARCHAR, address VARCHAR, contact_no VARCHAR,sync_status INTEGER,street1 TEXT, street2 TEXT,city VARCHAR, state VARCHAR, country VARCHAR)";
             
             
             
             
-             const char *ba_tbl_user_type_master="CREATE TABLE IF NOT EXISTS ba_tbl_user_type_master(id INTEGER PRIMARY KEY AUTOINCREMENT, user_type VARCHAR,created_date TIMESTAMP, is_deleted INTEGER, last_modified Timestamp)";
+             const char *ba_tbl_user_type_master="CREATE TABLE IF NOT EXISTS ba_tbl_user_type_master(id INTEGER PRIMARY KEY , user_type VARCHAR,created_date TIMESTAMP, is_deleted INTEGER, last_modified Timestamp)";
             
-			const char *ba_tbl_content = "CREATE TABLE IF NOT EXISTS ba_tbl_content (id INTEGER PRIMARY KEY , content_name VARCHAR, vendor_id VARCHAR, tags TEXT, title VARCHAR, content_size FLOAT, description TEXT, website VARCHAR, created_date TIMESTAMP, update_date TIMESTAMP, is_deleted INTEGER, delete_date TIMESTAMP, path VARCHAR, type VARCHAR,sync_status INTEGER)";
+			const char *ba_tbl_content = "CREATE TABLE IF NOT EXISTS ba_tbl_content (id INTEGER PRIMARY KEY , content_name VARCHAR, vendor_id VARCHAR, industry_id VARCHAR, tags TEXT, title VARCHAR, content_size FLOAT, description TEXT, website VARCHAR, created_date TIMESTAMP, update_date TIMESTAMP, is_deleted INTEGER, delete_date TIMESTAMP, path VARCHAR, type VARCHAR,sync_status INTEGER, cloud_path VARCHAR)";
             
             
             //	const char *appointments = " CREATE TABLE IF NOT EXISTS APPOINTMENTS(id INTEGER PRIMARY KEY, clientId NUMERIC, agentId NUMERIC, start_time BLOB, end_time BLOB, status TEXT)";
@@ -1516,6 +1516,19 @@
                     
                 }
                 
+                
+                tmp = (const char*)sqlite3_column_text(statement, 16);
+                if (tmp == NULL)
+                {
+                    
+                }
+                else
+                {
+                    NSString *Field0 =[[NSString alloc] initWithUTF8String:tmp];
+                    data17[i] = [NSString stringWithFormat:@"%@",Field0];
+                    
+                }
+
                 
                 
                 i++;

@@ -884,7 +884,10 @@
 //    [self displayAll:insertquery1];
     GlobalClass *obj = [GlobalClass getInstance];
 
-    NSString   *insertquery = [NSString stringWithFormat:@"INSERT INTO ba_tbl_content ( id, content_name , vendor_id , tags , title , content_size , description , website , created_date , update_date , is_deleted , delete_date, path,type,sync_status) VALUES ( \"%d\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\")", timestamp,@"vendor1", obj.VenID,@"photo1",@"picture",@"s",@"dsfsadsa",@"dfafaf",@"1",@"1",@"1",@"1",imagepath,@"audio",@"0"];
+    NSString    *cloud_path= [NSString stringWithFormat:@"VENDOR_%@",obj.VenID];
+
+    
+    NSString   *insertquery = [NSString stringWithFormat:@"INSERT INTO ba_tbl_content ( id, content_name , vendor_id ,industry_id, tags , title , content_size , description , website , created_date , update_date , is_deleted , delete_date, path,type,sync_status,cloud_path) VALUES ( \"%d\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\")", timestamp,@"vendor1", obj.VenID,@"1", @"photo1",@"picture",@"s",@"dsfsadsa",@"dfafaf",@"1",@"1",@"1",@"1",imagepath,@"audio",@"0",cloud_path];
     
     //         NSLog(@"")
     
@@ -1437,8 +1440,11 @@
         GlobalClass *obj = [GlobalClass getInstance];
         
         int timestamp = [[NSDate date] timeIntervalSince1970];
+        
+        NSString    *cloud_path= [NSString stringWithFormat:@"VENDOR_%@",obj.VenID];
 
-        NSString   *insertquery = [NSString stringWithFormat:@"INSERT INTO ba_tbl_content ( id, content_name , vendor_id , tags , title , content_size , description , website , created_date , update_date , is_deleted , delete_date, path,type,sync_status) VALUES ( \"%d\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\")", timestamp,@"vendor1", obj.VenID,@"photo1",@"picture",@"s",@"dsfsadsa",@"dfafaf",@"1",@"1",@"1",@"1",savedDescription,@"text",@"0"];
+
+        NSString   *insertquery = [NSString stringWithFormat:@"INSERT INTO ba_tbl_content ( id, content_name , vendor_id , industry_id, tags , title , content_size , description , website , created_date , update_date , is_deleted , delete_date, path,type,sync_status,cloud_path) VALUES ( \"%d\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\")", timestamp,@"vendor1", obj.VenID,@"1", @"photo1",@"picture",@"s",@"dsfsadsa",@"dfafaf",@"1",@"1",@"1",@"1",savedDescription,@"text",@"0",cloud_path];
         
         //         NSLog(@"")
         [self saveData:insertquery];

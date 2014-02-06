@@ -38,6 +38,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    j=0;
     UIImage *cameraImage = [UIImage imageNamed:@"camera_icon.png"];
     UIButton *cameraButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [cameraButton setImage:cameraImage forState:UIControlStateNormal];
@@ -238,7 +239,7 @@
 - (IBAction)sync:(id)sender
 {
     [self serversync];
-    [self  performSelector:@selector(vendorcontactsync) withObject:nil afterDelay:0.0];
+//    [self  performSelector:@selector(vendorcontactsync) withObject:nil afterDelay:0.0];
 
     SyncViewController *sync = [[SyncViewController alloc]initWithNibName:@"SyncViewController" bundle:nil];
     sync.modalTransitionStyle= UIModalTransitionStyleCrossDissolve;
@@ -297,7 +298,7 @@
 
 -(void)synccontent
 {
-    checktag=3;
+//    checktag=3;
     NSString *insertSQL1 = [NSString stringWithFormat:@"select count(id) from ba_tbl_content"];
     
     
@@ -320,64 +321,110 @@
         
         
         
-        [self getDataFrom_ba_tbl_vendor_master:insertSQL1];
+        [self getDataFrom_ba_tbl_content:insertSQL1];
         
         for (int i =0; i<TotalData; i++) {
             
             
-            
-            NSString *post = [NSString stringWithFormat:@"email=dasfas"];
-            
-            
-            
-            NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-            NSString *postLength = [NSString stringWithFormat:@"%d",[postData length]];
-            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-            
-            [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://skibuyerspick.appspot.com/fileupload"]]];
-            [request setHTTPMethod:@"POST"];
-            [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-            [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Current-Type"];
-            [request setHTTPBody:postData];
-            
-            NSURLResponse *response;
-            NSData *urlData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:nil];
-            NSString *stringResponse = [[NSString alloc] initWithData:urlData encoding:NSASCIIStringEncoding];
-            NSLog(@"response1=%@",stringResponse);
-
-            
-            
-            
-            
-            NSLog(@"VNAME=%@",data2[i]);
-            
-            NSURL *audiourl = [NSURL URLWithString:[NSString stringWithFormat:@"http://skibuyerspick.appspot.com/savevendor"]];
-            
-            ASIFormDataRequest *request1 = [ASIFormDataRequest requestWithURL:audiourl];
-            NSLog(@"sync=%@",data19[i]);
-            
-            if ([data19[i] isEqualToString:@"0"]) {
+            if ([data16[i] isEqualToString:@"0"]) {
                 
+
+                NSString *post = [NSString stringWithFormat:@"email=dasfas"];
+                
+                
+                
+                NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+                NSString *postLength = [NSString stringWithFormat:@"%d",[postData length]];
+                NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+                
+                [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://skibuyerspick.appspot.com/fileupload"]]];
+                [request setHTTPMethod:@"POST"];
+                [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+                [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Current-Type"];
+                [request setHTTPBody:postData];
+            
+                NSURLResponse *response;
+                NSData *urlData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:nil];
+                NSString *stringResponse = [[NSString alloc] initWithData:urlData encoding:NSASCIIStringEncoding];
+                NSLog(@"response1=%@",stringResponse);
+                
+                
+                      NSError* error;
+                NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData:urlData //1
+                                                                             options:kNilOptions
+                                                                               error:&error];
+                NSString   *str;
+                for (NSDictionary *actoAgent in responseDict)
+                {
+                    str= [actoAgent objectForKey:@"response"];
+                    NSLog(@"res=%@",str);
+                    
+                }
+                
+                NSURL *audiourl = [NSURL URLWithString:str];
+                ASIFormDataRequest *request1 = [ASIFormDataRequest requestWithURL:audiourl];
+                NSData *postData1 = [NSData dataWithContentsOfFile:data14[i] options: 0 error:&error];
+                
+                if ([data15[i] isEqualToString:@"image"]) {
+
+                NSLog(@"postData=%@",postData1);
+                    
+                    NSString    *nameofupload= [NSString stringWithFormat:@"image_%@.png",data10[i]];
+                [request1 addData:postData1 withFileName:nameofupload andContentType:@"image/png" forKey:@"uploaded_files"];
+                }
+                
+                
+                if ([data15[i] isEqualToString:@"video"]) {
+                    
+//                    NSLog(@"postData=%@",postData1);
+                    
+                    NSString    *nameofupload= [NSString stringWithFormat:@"video%@.mp4",data10[i]];
+                    [request1 addData:postData1 withFileName:nameofupload andContentType:@"video/mp4" forKey:@"uploaded_files"];
+                }
+
+                
+                if ([data15[i] isEqualToString:@"audio"]) {
+                    
+                    //                    NSLog(@"postData=%@",postData1);
+                    
+                    NSString    *nameofupload= [NSString stringWithFormat:@"audio%@.mp4",data10[i]];
+                    [request1 addData:postData1 withFileName:nameofupload andContentType:@"audio/mp3" forKey:@"uploaded_files"];
+                }
+
+                
+//                if ([data15[i] isEqualToString:@"text"]) {
+//                    
+//                    //                    NSLog(@"postData=%@",postData1);
+//                    
+//                    NSString    *nameofupload= [NSString stringWithFormat:@"text%@.mp4",data10[i]];
+//                    [request1 addData:postData1 withFileName:nameofupload andContentType:@"audio/mp3" forKey:@"uploaded_files"];
+//                }
+//
+                
+                
+            NSLog(@"sync=%@",data16[i]);
+            
+            
                 
                 [request1 addPostValue:data1[i] forKey:@"id"];
-                [request1 addPostValue:data2[i] forKey:@"vendor_name"];
-                [request1 addPostValue:data3[i] forKey:@"user_id"];
-                [request1 addPostValue:data4[i] forKey:@"vendor_title"];
+                [request1 addPostValue:data2[i] forKey:@"content_name"];
+                [request1 addPostValue:data3[i] forKey:@"vendor_id"];
+                [request1 addPostValue:data4[i] forKey:@"industry_id"];
                 [request1 addPostValue:data5[i] forKey:@"tags"];
-                [request1 addPostValue:data6[i] forKey:@"created_date"];
-                [request1 addPostValue:data7[i] forKey:@"description"];
-                [request1 addPostValue:data8[i] forKey:@"security_pin"];
-                [request1 addPostValue:data9[i] forKey:@"old_security_pin"];
-                [request1 addPostValue:data10[i] forKey:@"last_modified_security_pin"];
-                [request1 addPostValue:data11[i] forKey:@"geo_latitude"];
-                [request1 addPostValue:data12[i] forKey:@"geo_longitude"];
-                [request1 addPostValue:data13[i] forKey:@"last_modified_date"];
-                [request1 addPostValue:data14[i] forKey:@"is_deleted"];
-                [request1 addPostValue:data15[i] forKey:@"delete_date"];
-                [request1 addPostValue:data16[i] forKey:@"industry_id"];
-                [request1 addPostValue:data17[i] forKey:@"current_location"];
-                [request1 addPostValue:data18[i] forKey:@"path"];
-                [request1 addPostValue:data19[i] forKey:@"sync_status"];
+                [request1 addPostValue:data6[i] forKey:@"title"];
+                [request1 addPostValue:data7[i] forKey:@"content_size"];
+                [request1 addPostValue:data8[i] forKey:@"description"];
+                [request1 addPostValue:data9[i] forKey:@"website"];
+                [request1 addPostValue:data10[i] forKey:@"created_date"];
+                [request1 addPostValue:data11[i] forKey:@"update_date"];
+                [request1 addPostValue:data12[i] forKey:@"is_deleted"];
+                [request1 addPostValue:data13[i] forKey:@"delete_date"];
+                [request1 addPostValue:data14[i] forKey:@"path"];
+                [request1 addPostValue:data15[i] forKey:@"type"];
+                [request1 addPostValue:data16[i] forKey:@"sync_status"];
+                [request1 addPostValue:data17[i] forKey:@"cloud_path"];
+
+         
                 
                 
                 
@@ -387,6 +434,9 @@
                 
                 [request1 startAsynchronous];
                 
+                k=k++;
+
+              //  [request1 startSynchronous];
                 
             }
             
@@ -403,42 +453,14 @@
     
     
     
-    ////////////////////////////content
-    
-    //    NSString *insertSQL2 = [NSString stringWithFormat:@"select count(id) from ba_tbl_content"];
-    //
-    //
-    //
-    //    [self displayAll:insertSQL1];
-    //
-    //
-    //
-    //    if ([MobileNo isEqualToString:@"0"]) {
-    //
-    //    }
-    //
-    //
-    //
-    //    else
-    //    {
-    //
-    //
-    //        NSString *insertSQL1 = [NSString stringWithFormat:@"select * from ba_tbl_content"];
-    //        
-    //        
-    //        
-    //        [self getDataFrom_ba_tbl_content:insertSQL1];
-    //        
-    //        for (int i =0; i<TotalContentData; i++) {
-    //            
-    //        }
-    //        
-    //        
-    //    }
 }
 
 -(void)vendorcontactsync
 {
+//    checktag=2;
+    NSLog(@"vendorcontactsynccalled");
+
+    k=0;
     NSString *insertSQL1 = [NSString stringWithFormat:@"select count(id) from ba_tbl_vendor"];
     
     
@@ -464,14 +486,14 @@
         [self getDataFrom_ba_tbl_vendor:insertSQL1];
         
         for (int i =0; i<TotalData; i++) {
-            checktag=2;
+//            checktag=2;
 
             NSLog(@"VNAME=%@",data2[i]);
             
             NSURL *audiourl = [NSURL URLWithString:[NSString stringWithFormat:@"http://skibuyerspick.appspot.com/savevendorcontact"]];
             
             ASIFormDataRequest *request1 = [ASIFormDataRequest requestWithURL:audiourl];
-            NSLog(@"sync=%@",data19[i]);
+            NSLog(@"sync=%@",data7[i]);
             
             if ([data7[i] isEqualToString:@"0"]) {
 
@@ -498,7 +520,9 @@
                 [request1 setDelegate:self];
                 
                 [request1 startAsynchronous];
-                
+//                [request1 startSynchronous];
+
+                k=k++;
                 
             }
             
@@ -518,6 +542,7 @@
 -(void)serversync
 {
     checktag=1;
+    k=0;
     NSString *insertSQL1 = [NSString stringWithFormat:@"select count(id) from ba_tbl_vendor_master"];
     
     
@@ -582,16 +607,19 @@
         [request1 setDelegate:self];
         
         [request1 startAsynchronous];
-                
-                
+                k=k++;
                   }
             
             
             
             else
             {
+                
+                
+//                [self vendorcontactsync];
+//                checktag=2;
             }
-            
+           
             
         }
 
@@ -653,7 +681,7 @@
     
     
     if (checktag==1) {
-        
+        j=j++;
         NSLog(@"checktag=1111111111111111111111111111");
 
     
@@ -664,18 +692,29 @@
         
         
         
-        NSString   *insertquery1 = [NSString stringWithFormat:@"update  ba_tbl_content SET vendor_id =\"%@\" , sync_status = \"%@\" where vendor_id =\"%@\"" ,[actoAgent objectForKey:@"id"],[actoAgent objectForKey:@"sync_status"],[actoAgent objectForKey:@"old_id"] ];
+        NSString   *insertquery1 = [NSString stringWithFormat:@"update  ba_tbl_content SET vendor_id =\"%@\"  where vendor_id =\"%@\"" ,[actoAgent objectForKey:@"id"],[actoAgent objectForKey:@"old_id"] ];
         [self saveData:insertquery1];
         
-        NSString   *insertquery2 = [NSString stringWithFormat:@"update  ba_tbl_vendor SET vendor_id =\"%@\" , sync_status = \"%@\" where vendor_id =\"%@\"" ,[actoAgent objectForKey:@"id"],[actoAgent objectForKey:@"sync_status"],[actoAgent objectForKey:@"old_id"] ];
+        NSString   *insertquery2 = [NSString stringWithFormat:@"update  ba_tbl_vendor SET vendor_id =\"%@\"  where vendor_id =\"%@\"" ,[actoAgent objectForKey:@"id"],[actoAgent objectForKey:@"old_id"] ];
         [self saveData:insertquery2];
+        
+        if (j==k) {
+            checktag = 2;
+            j=0;
+            k=0;
+            NSLog(@"reachedatend");
+            [self vendorcontactsync];
+        }
         
 
     }
         
     }
     
-   else if (checktag==2) {
+    if (checktag==2) {
+        
+        j=j++;
+
         NSLog(@"checktag=22222222222222222222222");
              for (NSDictionary *actoAgent in responseDict){
 
@@ -686,11 +725,43 @@
             [self saveData:insertquery1];
             
             
-            
+                 if (j==k) {
+                     checktag = 3;
+                     j=0;
+                     k=0;
+                     [self synccontent];
+                 }
+
         }
 
     }
     
+    
+    if (checktag==3) {
+        
+        j=j++;
+        
+        NSLog(@"checktag=3333333333333333");
+        for (NSDictionary *actoAgent in responseDict){
+            
+            
+            
+            
+            NSString   *insertquery1 = [NSString stringWithFormat:@"update  ba_tbl_content SET id =\"%@\" , sync_status = \"%@\" where id =\"%@\"" ,[actoAgent objectForKey:@"id"],[actoAgent objectForKey:@"sync_status"],[actoAgent objectForKey:@"old_id"] ];
+            [self saveData:insertquery1];
+            
+            
+            if (j==k) {
+                checktag = 3;
+                j=0;
+                k=0;
+            }
+            
+        }
+        
+    }
+    
+
     
 
 }

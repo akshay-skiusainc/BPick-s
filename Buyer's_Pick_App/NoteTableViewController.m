@@ -240,10 +240,10 @@
     dataFwdObj=[DataFwdClass getInstance];
     dataFwdObj.noteTagsArray = [[NSMutableArray alloc] initWithArray:addedTags];
     NSLog(@"Back Btn dataFwdObj.noteTagsArray: %@", dataFwdObj.noteTagsArray);
-    [self.navigationController popViewControllerAnimated:YES];
-
-
-//    [self dismissViewControllerAnimated:YES completion:Nil];
+    // [self.navigationController popViewControllerAnimated:YES];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"tagsUpdateNotifier" object:nil];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning
